@@ -26,12 +26,12 @@ void setup() {
 void draw() {
   tempo++;
   
-  c.calculosIniciais();
-  c.calculosFinais();
-  c.lixeira();
+  c.unificarFuncoes();
   c.logEnxuto();
   
   if (!c.existemPedidos()) {
+    c.unificarFuncoes();
+    c.logEnxuto();
     println("--- SIMULAÇÃO CONCLUÍDA NO TEMPO: " + tempo + " ---");
     noLoop();
   }
@@ -106,6 +106,11 @@ class Central {
   void lixeira() {
     eliminarPedidos();
   }
+  void unificarFuncoes() {
+    calculosIniciais();
+    calculosFinais();
+    lixeira();
+  }
   void verificarPassageiros() {
     int memoriaLotacao = 0;
     for(int a = 0; a < e.length; a++) {
@@ -164,12 +169,12 @@ class Central {
       e[a].tarefaParaBaixo = false;
       
       for(int b = 0; b < e[a].pedidos.size(); b++) {
-        if(((e[a].pedidos.get(b).origem > e[a].andar && !e[a].pedidos.get(b).embarque) ||
+        if(((e[a].pedidos.get(b).origem >= e[a].andar && !e[a].pedidos.get(b).embarque) ||
           (e[a].pedidos.get(b).destino > e[a].andar && e[a].pedidos.get(b).embarque)) && 
           e[a].pedidos.get(b).valido) {
             e[a].tarefaParaCima = true;
         } 
-        if(((e[a].pedidos.get(b).origem < e[a].andar && !e[a].pedidos.get(b).embarque) ||
+        if(((e[a].pedidos.get(b).origem <= e[a].andar && !e[a].pedidos.get(b).embarque) ||
           (e[a].pedidos.get(b).destino < e[a].andar && e[a].pedidos.get(b).embarque)) && 
           e[a].pedidos.get(b).valido) {
             e[a].tarefaParaBaixo = true;
